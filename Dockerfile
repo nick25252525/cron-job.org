@@ -4,8 +4,8 @@ RUN apt-get update && \
   libev-dev libsqlite3-dev libboost-all-dev libssl-dev flex bison wget
 
 WORKDIR /src/deps
-RUN wget https://c-ares.org/download/c-ares-1.21.0.tar.gz
-RUN tar -xzf c-ares-1.21.0.tar.gz
+RUN wget https://github.com/c-ares/c-ares/releases/download/v1.34.4/c-ares-1.34.4.tar.gz
+RUN tar -xzf c-ares-1.34.4.tar.gz
 RUN cd c-ares-1.21.0 && ./configure --prefix=/opt/chronos && make -j && make install && cd ..
 RUN wget https://curl.haxx.se/download/curl-8.4.0.tar.gz
 RUN tar -xzf curl-8.4.0.tar.gz
