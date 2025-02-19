@@ -22,6 +22,9 @@ import translationZhTW from './locales/zh_TW/translation.json';
 import translationRo from './locales/ro/translation.json';
 import translationPL from './locales/pl/translation.json';
 import translationPtBR from './locales/pt_BR/translation.json';
+import translationZhCN from './locales/zh_CN/translation.json';
+import translationHU from './locales/hu/translation.json';
+import translationtrTR from './locales/tr_TR/translation.json';
 
 import AppMenu from './components/AppMenu';
 import Dashboard from './components/dashboard/Dashboard';
@@ -45,6 +48,9 @@ import 'moment/locale/ro';
 import 'moment/locale/pl';
 import 'moment/locale/zh-tw';
 import 'moment/locale/pt-br';
+import 'moment/locale/zh-cn';
+import 'moment/locale/hu';
+import 'moment/locale/tr';
 import moment from 'moment';
 import useLanguageCode, { getLanguageCode } from './hooks/useLanguageCode';
 import { Config } from './utils/Config';
@@ -86,6 +92,15 @@ const LANGUAGE_RESOURCES = {
   pt_BR: {
     translation: translationPtBR,
   },
+  zh_CN: {
+    translation: translationZhCN,
+  },
+  hu_HU: {
+    translation: translationHU,
+  },
+  tr_TR: {
+    translation: translationtrTR,
+  }
 };
 
 i18n
