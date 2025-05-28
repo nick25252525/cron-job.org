@@ -11,7 +11,7 @@ import EnableIcon from '@material-ui/icons/AlarmOnOutlined';
 import DisableIcon from '@material-ui/icons/AlarmOffOutlined';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FolderIcon from '@material-ui/icons/FolderOutlined';
-import { useHistory } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import Breadcrumbs from '../misc/Breadcrumbs';
 import useJobs from '../../hooks/useJobs';
 import Heading from '../misc/Heading';
@@ -32,12 +32,11 @@ const REFRESH_INTERVAL = 60000;
 export default function Jobs({ match }) {
   const { folderId, folderTitle, folderBreadcrumb, urlPrefix, folders } = useFolder(match);
 
-  const jobSelector = jobs => jobs.filter(x => x.folderId === folderId);
+  const jobSelector = jobs => jobs.filter(x => x.folderId === folderId || folderId === 'all');
 
   const classes = useStyles();
   const { jobs, loading: isLoading, refresh: refreshJobs } = useJobs(REFRESH_INTERVAL, jobSelector);
   const { t } = useTranslation();
-  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
   const [confirmJobMassAction, setConfirmJobMassAction] = useState(null);
   const [moveMassAction, setMoveMassAction] = useState(null);
@@ -51,6 +50,14 @@ export default function Jobs({ match }) {
         enqueueSnackbar(t('common.massActionFailed'), { variant: 'error' });
       })
       .finally(() => refreshJobs());
+  }
+
+  function jobLink(job, path = '') {
+    if (job.folderId === 0) {
+      return `/jobs/${job.jobId}${path}`;
+    } else {
+      return `/jobs/folders/${job.folderId}/${job.jobId}${path}`;
+    }
   }
 
   const COLUMNS = [
@@ -90,7 +97,8 @@ export default function Jobs({ match }) {
           size="small"
           startIcon={<HistoryIcon />}
           className={classes.actionButton}
-          onClick={() => history.push(urlPrefix + '/' + job.jobId + '/history')}
+          component={RouterLink}
+          to={folderId === 'all' ? jobLink(job, '/history') : `${urlPrefix}/${job.jobId}/history`}
           >
           {t('jobs.history')}
         </Button>
@@ -99,7 +107,8 @@ export default function Jobs({ match }) {
           size="small"
           startIcon={<EditIcon />}
           className={classes.actionButton}
-          onClick={() => history.push(urlPrefix + '/' + job.jobId)}
+          component={RouterLink}
+          to={folderId === 'all' ? jobLink(job) : `${urlPrefix}/${job.jobId}`}
           >
           {t('common.edit')}
         </Button>
@@ -150,13 +159,15 @@ export default function Jobs({ match }) {
             variant='contained'
             size='small'
             startIcon={<FolderIcon />}
-            onClick={() => history.push('/jobs/folders')}
+            component={RouterLink}
+            to='/jobs/folders'
             >{t('jobs.folders.manage')}</Button>
           <Button
             variant='contained'
             size='small'
             startIcon={<AddIcon />}
-            onClick={() => history.push(urlPrefix + '/create')}
+            component={RouterLink}
+            to={folderId === 'all' ? '/jobs/create' : `${urlPrefix}/create`}
             >{t('jobs.createJob')}</Button>
         </ButtonGroup>
       </>}>

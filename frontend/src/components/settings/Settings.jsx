@@ -24,7 +24,6 @@ import DeleteMFADeviceDialog from './DeleteMFADeviceDialog';
 import { RegexPatterns, SubscriptionStatus } from '../../utils/Constants';
 import DeleteAccountDialog from './DeleteAccountDialog';
 import ManageSubscriptionIcon from '@material-ui/icons/CreditCard';
-import CancelSubscriptionIcon from '@material-ui/icons/Cancel';
 import SubscriptionActiveIcon from '@material-ui/icons/FavoriteBorder';
 import SubscriptionInactiveIcon from '@material-ui/icons/PauseCircleOutline';
 import LearnMoreIcon from '@material-ui/icons/Loyalty';
@@ -83,7 +82,6 @@ export default function Settings() {
   const [ isLoading, setIsLoading ] = useState(true);
   const [ saving, setSaving ] = useState(false);
   const [ isLoadingManageSubscription, setIsLoadingManageSubscription ] = useState(false);
-  const [ isLoadingCancelSubscription, setIsLoadingCancelSubscription ] = useState(false);
 
   const [ showChangePassword, setShowChangePassword ] = useState(false);
   const [ showChangeEmail, setShowChangeEmail ] = useState(false);
@@ -174,28 +172,27 @@ export default function Settings() {
           setIsLoadingManageSubscription(false);
         });
     } else if (userProfile.userSubscription.type === 'paddle') {
+      const wnd = window.open('', '_blank');
+
       getSubscriptionLink('manage')
-        .then(response => window.location.href = response.url)
+        .then(response => {
+          if (wnd) {
+            wnd.location.href = response.url;
+          } else {
+            window.location.href = response.url;
+          }
+        })
         .catch(() => {
+          if (wnd) {
+            wnd.close();
+          }
           enqueueSnackbar(t('settings.manageSubscriptionFailed'), { variant: 'error' });
-          setIsLoadingManageSubscription(false);
-        });
+        })
+        .finally(() => setIsLoadingManageSubscription(false));
     }
   }
 
-  function cancelSubscription() {
-    setIsLoadingCancelSubscription(true);
-
-    getSubscriptionLink('cancel')
-      .then(response => window.location.href = response.url)
-      .catch(() => {
-        enqueueSnackbar(t('settings.manageSubscriptionFailed'), { variant: 'error' });
-        setIsLoadingCancelSubscription(false);
-      });
-  }
-
   const isCancelledSubscription = userProfile && userProfile.userSubscription && userProfile.userSubscription.status === SubscriptionStatus.CANCELLED;
-  const isExpiringSubscription = userProfile && userProfile.userSubscription && userProfile.userSubscription.status === SubscriptionStatus.EXPIRING;
   const isPaymentReturn = window && window.location && window.location.search === '?checkoutSuccess=true';
 
   useEffect(() => {
@@ -401,28 +398,17 @@ export default function Settings() {
                     >
                     {t('settings.manageSubscription')}
                   </Button>}
-                {userProfile.userSubscription && userProfile.userSubscription.type==='paddle' && userProfile.userSubscription.status === SubscriptionStatus.ACTIVE && <ButtonGroup>
+                {userProfile.userSubscription && userProfile.userSubscription.type==='paddle' &&
                     <Button
                       size='small'
                       variant='contained'
                       startIcon={isLoadingManageSubscription ? <CircularProgress size='small' /> : <ManageSubscriptionIcon />}
                       onClick={manageSubscription}
-                      disabled={isLoadingManageSubscription || isCancelledSubscription || isExpiringSubscription}
+                      disabled={isLoadingManageSubscription}
                       float='right'
                       >
-                      {t('settings.updatePaymentMethod')}
-                    </Button>
-                    <Button
-                      size='small'
-                      variant='contained'
-                      startIcon={isLoadingCancelSubscription ? <CircularProgress size='small' /> : <CancelSubscriptionIcon />}
-                      onClick={cancelSubscription}
-                      disabled={isLoadingCancelSubscription || isCancelledSubscription || isExpiringSubscription}
-                      float='right'
-                      >
-                      {t('settings.cancelSubscription')}
-                    </Button>
-                  </ButtonGroup>}
+                      {t('settings.manageSubscription')}
+                    </Button>}
                 {!isPaymentReturn && ((!userProfile.userSubscription) || (userProfile.userSubscription.status === SubscriptionStatus.CANCELLED)) &&
                   <Button
                     size='small'

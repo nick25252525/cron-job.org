@@ -12,6 +12,7 @@ import { initReactI18next } from 'react-i18next';
 import useLanguageCode from './hooks/useLanguageCode';
 
 import translationEN from './locales/en/translation.json';
+import translationDA from './locales/da/translation.json';
 import translationDE from './locales/de/translation.json';
 import translationIT from './locales/it/translation.json';
 import translationFR from './locales/fr/translation.json';
@@ -24,6 +25,7 @@ import translationZhCN from './locales/zh_CN/translation.json';
 import translationHU from './locales/hu/translation.json';
 import translationTrTR from './locales/tr_TR/translation.json';
 
+import 'moment/locale/da';
 import 'moment/locale/de';
 import 'moment/locale/it';
 import 'moment/locale/fr';
@@ -34,12 +36,16 @@ import 'moment/locale/zh-cn';
 import 'moment/locale/zh-tw';
 import 'moment/locale/pt-br';
 import 'moment/locale/hu';
+import 'moment/locale/tr';
 import moment from 'moment';
 import { Config } from './utils/Config';
 
 const LANGUAGE_RESOURCES = {
   en: {
     translation: translationEN
+  },
+  da: {
+    translation: translationDA
   },
   de: {
     translation: translationDE
@@ -71,7 +77,7 @@ const LANGUAGE_RESOURCES = {
   hu: {
     translation: translationHU
   },
-  tr_TR: {
+  tr: {
     translation: translationTrTR
   }
 };

@@ -67,7 +67,8 @@
     "confirmMassDeleteText": "Do you really want to delete the selected item?",
     "confirmMassDeleteText_plural": "Do you really want to delete the {{count}} selected items?",
     "selectAll": "Select all",
-    "deselectAll": "Deselect all"
+    "deselectAll": "Deselect all",
+    "requestDeniedForSecurityReasons": "Sorry, we couldn't process your request. Possible reason is a non-wellformed job. If you have questions, please contact our support team."
   },
   "login": {
     "emailAddress": "Email address",
@@ -154,6 +155,7 @@
     }
   },
   "jobs": {
+    "allJobs": "All",
     "nojobs": "No jobs found.",
     "titleurl": "Title, URL",
     "lastExecution": "Last execution",
